@@ -1,0 +1,10 @@
+services:
+  app:
+    image: ${IMAGE_URI}
+    container_name: flan-t5-api
+    ports:
+      - "8000:8000"
+    environment:
+      MODEL_NAME: ${MODEL_NAME}
+      MAX_NEW_TOKENS: ${MAX_NEW_TOKENS}
+    restart: unless-stopped

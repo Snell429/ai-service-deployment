@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flan-t5-api
+    ports:
+      - "8000:8000"
+    environment:
+      MODEL_NAME: google/flan-t5-base
+      MAX_NEW_TOKENS: 50
+    restart: unless-stopped
