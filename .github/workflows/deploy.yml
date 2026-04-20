@@ -77,10 +77,10 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             mkdir -p /home/${{ secrets.VM_USER }}/ai-service
-            cat > /home/${{ secrets.VM_USER }}/ai-service/.env <<EOF
-            IMAGE_URI=${{ needs.build-and-push.outputs.image_uri }}
-            MODEL_NAME=google/flan-t5-base
-            MAX_NEW_TOKENS=50
-            EOF
-            docker compose --env-file /home/${{ secrets.VM_USER }}/ai-service/.env -f /home/${{ secrets.VM_USER }}/ai-service/docker-compose.prod.yml pull
-            docker compose --env-file /home/${{ secrets.VM_USER }}/ai-service/.env -f /home/${{ secrets.VM_USER }}/ai-service/docker-compose.prod.yml up -d
+            cd /home/${{ secrets.VM_USER }}/ai-service
+            export IMAGE_URI="${{ needs.build-and-push.outputs.image_uri }}"
+            export MODEL_NAME="google/flan-t5-base"
+            export MAX_NEW_TOKENS="50"
+            docker compose -f docker-compose.prod.yml config
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d
