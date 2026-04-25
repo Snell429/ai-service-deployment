@@ -66,10 +66,11 @@ jobs:
           script: |
             mkdir -p /home/${{ secrets.VM_USER }}/ai-service
             cd /home/${{ secrets.VM_USER }}/ai-service
+            IMAGE_URI='${{ needs.build-and-push.outputs.image_uri }}'
             cat > docker-compose.prod.yml <<EOF
             services:
               app:
-                image: ${{ needs.build-and-push.outputs.image_uri }}
+                image: "${IMAGE_URI}"
                 container_name: flan-t5-api
                 ports:
                   - "8000:8000"
@@ -78,6 +79,7 @@ jobs:
                   MAX_NEW_TOKENS: "50"
                 restart: unless-stopped
             EOF
+            cat docker-compose.prod.yml
             docker compose -f docker-compose.prod.yml config
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d
