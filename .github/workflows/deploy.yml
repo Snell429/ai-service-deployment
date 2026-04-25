@@ -66,7 +66,7 @@ jobs:
           script: |
             mkdir -p /home/${{ secrets.VM_USER }}/ai-service
             cd /home/${{ secrets.VM_USER }}/ai-service
-            IMAGE_URI='${{ needs.build-and-push.outputs.image_uri }}'
+            IMAGE_URI='${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REPO }}/flan-t5-api:${{ github.sha }}'
             cat > docker-compose.prod.yml <<EOF
             services:
               app:
