@@ -83,3 +83,13 @@ jobs:
             docker compose -f docker-compose.prod.yml config
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d
+
+      - name: Verify test API health
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            sleep 10
+            curl --fail --silent http://localhost:8000/health
