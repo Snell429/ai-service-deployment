@@ -45,10 +45,15 @@ jobs:
           echo "image_uri=$IMAGE_URI" >> "$GITHUB_OUTPUT"
 
       - name: Build Docker image
-        run: docker build -t ${{ steps.meta.outputs.image_uri }} .
+        run: |
+          LATEST_URI=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:latest
+          docker build -t ${{ steps.meta.outputs.image_uri }} -t $LATEST_URI .
 
       - name: Push Docker image
-        run: docker push ${{ steps.meta.outputs.image_uri }}
+        run: |
+          LATEST_URI=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ steps.meta.outputs.image_uri }}
+          docker push $LATEST_URI
 
   deploy-vm:
     runs-on: ubuntu-latest
