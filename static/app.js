@@ -1,12 +1,21 @@
 const healthBadge = document.getElementById("health-badge");
 const modelName = document.getElementById("model-name");
 const promptInput = document.getElementById("prompt");
+const presetSelect = document.getElementById("preset");
+const toneSelect = document.getElementById("tone");
 const resultBox = document.getElementById("result");
 const requestState = document.getElementById("request-state");
 const generateButton = document.getElementById("generate-btn");
 const clearButton = document.getElementById("clear-btn");
 
-promptInput.value = "Explain AI simply";
+const presetPrompts = {
+  summary: "Redige directement en francais un resume professionnel en 5 lignes expliquant l'interet de deployer une API NLP dans une entreprise.",
+  email: "Redige un email professionnel annonçant qu'une API NLP a ete deployee avec succes sur Google Cloud et qu'elle est prete pour les tests utilisateurs.",
+  comparison: "Compare en quelques phrases les avantages d'une architecture avec une seule VM par rapport a une architecture avec load balancer et autoscaling.",
+  explanation: "Explique simplement a un responsable non technique ce que signifient load balancing et autoscaling pour une API web.",
+};
+
+promptInput.value = presetPrompts.explanation;
 
 async function checkHealth() {
   try {
@@ -45,7 +54,11 @@ async function generateText() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({
+        prompt,
+        mode: presetSelect.value || "general",
+        tone: toneSelect.value,
+      }),
     });
 
     const data = await response.json();
@@ -69,6 +82,13 @@ clearButton.addEventListener("click", () => {
   promptInput.value = "";
   resultBox.textContent = "La reponse du modele apparaitra ici.";
   requestState.textContent = "";
+});
+
+presetSelect.addEventListener("change", () => {
+  const preset = presetSelect.value;
+  if (preset && presetPrompts[preset]) {
+    promptInput.value = presetPrompts[preset];
+  }
 });
 
 checkHealth();

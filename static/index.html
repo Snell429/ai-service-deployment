@@ -20,8 +20,29 @@
 
     <section class="panel app-grid">
       <div class="card">
+        <div class="config-grid">
+          <div>
+            <label for="preset" class="label">Scenario</label>
+            <select id="preset">
+              <option value="">Choisir un exemple</option>
+              <option value="summary">Resume professionnel</option>
+              <option value="email">Email professionnel</option>
+              <option value="comparison">Comparaison technique</option>
+              <option value="explanation">Explication simple</option>
+            </select>
+          </div>
+          <div>
+            <label for="tone" class="label">Style</label>
+            <select id="tone">
+              <option value="professional">Professionnel</option>
+              <option value="simple">Simple</option>
+              <option value="executive">Executif</option>
+            </select>
+          </div>
+        </div>
         <label for="prompt" class="label">Prompt</label>
         <textarea id="prompt" rows="8" placeholder="Exemple : Explain AI simply"></textarea>
+        <p class="hint">Astuce : choisissez un scenario puis adaptez le texte pour guider FLAN-T5 de facon plus fiable.</p>
         <div class="actions">
           <button id="generate-btn" type="button">Generer</button>
           <button id="clear-btn" type="button" class="secondary">Effacer</button>
