@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLAN-T5 Web App</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="panel hero">
+      <p class="eyebrow">Hugging Face + FastAPI</p>
+      <h1>Testez votre modele FLAN-T5 depuis le navigateur</h1>
+      <p class="lead">Cette interface envoie vos prompts a l'API deja deployee et affiche la reponse du modele en temps reel.</p>
+      <div class="status-row">
+        <span id="health-badge" class="badge">Verification...</span>
+        <span id="model-name" class="meta"></span>
+      </div>
+    </section>
+
+    <section class="panel app-grid">
+      <div class="card">
+        <label for="prompt" class="label">Prompt</label>
+        <textarea id="prompt" rows="8" placeholder="Exemple : Explain AI simply"></textarea>
+        <div class="actions">
+          <button id="generate-btn" type="button">Generer</button>
+          <button id="clear-btn" type="button" class="secondary">Effacer</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="result-head">
+          <span class="label">Reponse</span>
+          <span id="request-state" class="meta"></span>
+        </div>
+        <pre id="result" class="result-box">La reponse du modele apparaitra ici.</pre>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
