@@ -4,7 +4,16 @@ Projet IA / MLOps autour du modele `google/flan-t5-base`, expose via une API `Fa
 
 ## Objectif
 
-Ce projet montre comment :
+L'objectif principal de ce projet est de transformer un modele NLP pre-entraine en un service web exploitable, testable et deployable dans un contexte proche de la production.
+
+Autrement dit, le projet ne consiste pas seulement a charger un modele Hugging Face, mais a construire toute la chaine necessaire pour :
+- exposer le modele via une API utilisable par une application
+- automatiser son deploiement sur le cloud
+- separer les environnements `test` et `production`
+- rendre le service scalable avec load balancing et autoscaling
+- proposer une interface web pour valider le comportement du modele en situation reelle
+
+Ce projet montre donc comment :
 - integrer un modele Hugging Face dans une API web
 - deployer l'application sur des VM GCP
 - automatiser le build et le deploiement avec une pipeline CI/CD
