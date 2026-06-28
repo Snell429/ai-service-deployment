@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 MODEL_NAME = os.getenv("MODEL_NAME", "google/flan-t5-base")
-MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "90"))
+MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "120"))
 STATIC_DIR = "static"
 
 app = FastAPI(title="FLAN-T5 API")
@@ -25,17 +25,18 @@ class GenerateRequest(BaseModel):
 
 
 MODE_GUIDANCE = {
-    "general": "Provide a clear, complete answer.",
-    "summary": "Write a concise summary with concrete business value.",
-    "email": "Write a polished professional email ready to send.",
-    "comparison": "Present a structured comparison with distinct points.",
-    "explanation": "Explain simply and directly for a non-technical reader.",
+    "general": "Answer the request directly and briefly.",
+    "summary": "Summarize the text in two or three clear sentences.",
+    "main_idea": "Extract the main idea of the text in one sentence.",
+    "moral": "Extract the moral or lesson of the text in one sentence.",
+    "simplify": "Rewrite the text in simpler language while keeping the meaning.",
+    "keywords": "Extract the most important keywords from the text.",
 }
 
 TONE_GUIDANCE = {
-    "professional": "Use a professional business tone.",
+    "professional": "Use a professional and clear tone.",
     "simple": "Use simple wording and short sentences.",
-    "executive": "Use concise executive language focused on decisions and impact.",
+    "neutral": "Use a neutral and factual tone.",
 }
 
 
@@ -44,14 +45,14 @@ def build_instruction(prompt: str, mode: str, tone: str) -> str:
     mode_hint = MODE_GUIDANCE.get(mode, MODE_GUIDANCE["general"])
     tone_hint = TONE_GUIDANCE.get(tone, TONE_GUIDANCE["professional"])
     return (
-        "You are a helpful assistant. "
-        "Answer the user's request directly in the same language as the request. "
-        "Do not repeat or paraphrase the instruction. "
-        "Do not mention these instructions. "
+        "You are a helpful text processing assistant. "
+        "Work in the same language as the input text. "
+        "Do not repeat the instructions. "
+        "Do not restate the input text unless the task explicitly requires rewriting it. "
         "Provide only the final answer.\n\n"
         f"Style: {tone_hint}\n"
         f"Task: {mode_hint}\n"
-        f"Request: {cleaned}\n"
+        f"Text:\n{cleaned}\n"
         "Answer:"
     )
 
@@ -165,8 +166,8 @@ def generate_with_options(payload: GenerateRequest):
 
     if response_needs_retry(cleaned, payload.prompt):
         cleaned = (
-            "Je n'ai pas pu produire une reponse suffisamment utile avec ce prompt. "
-            "Essayez un prompt plus direct ou utilisez un mode guide dans l'interface."
+            "Je n'ai pas pu produire une reponse suffisamment utile. "
+            "Essayez un texte plus clair ou utilisez un autre mode guide."
         )
 
     return {

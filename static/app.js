@@ -3,19 +3,45 @@ const modelName = document.getElementById("model-name");
 const promptInput = document.getElementById("prompt");
 const presetSelect = document.getElementById("preset");
 const toneSelect = document.getElementById("tone");
+const modeHint = document.getElementById("mode-hint");
 const resultBox = document.getElementById("result");
 const requestState = document.getElementById("request-state");
 const generateButton = document.getElementById("generate-btn");
 const clearButton = document.getElementById("clear-btn");
 
 const presetPrompts = {
-  summary: "Redige directement en francais un resume professionnel en 5 lignes expliquant l'interet de deployer une API NLP dans une entreprise.",
-  email: "Redige un email professionnel annonçant qu'une API NLP a ete deployee avec succes sur Google Cloud et qu'elle est prete pour les tests utilisateurs.",
-  comparison: "Compare en quelques phrases les avantages d'une architecture avec une seule VM par rapport a une architecture avec load balancer et autoscaling.",
-  explanation: "Explique simplement a un responsable non technique ce que signifient load balancing et autoscaling pour une API web.",
+  summary: `A little white cat lived in a house with his family. One day, he went outside to play in the garden and wandered too far away. Soon, he could not find his way back home.
+
+The cat was scared and started to meow. A kind neighbor heard him and looked at his collar. She recognized the address on it.
+
+The neighbor took the little cat back home. His family was very happy to see him again.
+
+Since that day, the little cat always stayed close to the house.
+
+Moral: We should be careful when we go far away from home.`,
+  main_idea: `Load balancing distributes incoming requests across multiple servers. It helps an application stay available, avoid overload, and continue working even if one machine fails. This approach is common in cloud deployments.`,
+  moral: `A little white cat lived in a house with his family. One day, he went outside to play in the garden and wandered too far away. Soon, he could not find his way back home.
+
+The cat was scared and started to meow. A kind neighbor heard him and looked at his collar. She recognized the address on it.
+
+The neighbor took the little cat back home. His family was very happy to see him again.
+
+Since that day, the little cat always stayed close to the house.`,
+  simplify: `Load balancing distributes incoming requests across multiple backend instances so that no single server becomes overwhelmed. It improves availability, scalability, and resilience in production environments.`,
+  keywords: `This project deploys a Hugging Face FLAN-T5 model through a FastAPI application, containerizes it with Docker, automates CI/CD with GitHub Actions, and runs it on Google Cloud with load balancing and autoscaling.`,
 };
 
-promptInput.value = presetPrompts.explanation;
+const presetHints = {
+  summary: "Le modele essaiera de produire un resume court du texte colle.",
+  main_idea: "Le modele essaiera de donner l'idee centrale en une phrase.",
+  moral: "Le modele essaiera d'extraire la morale ou la lecon du texte.",
+  simplify: "Le modele essaiera de reformuler le texte avec des mots plus simples.",
+  keywords: "Le modele essaiera d'extraire les mots-cles les plus importants.",
+};
+
+presetSelect.value = "summary";
+promptInput.value = presetPrompts.summary;
+modeHint.textContent = presetHints.summary;
 
 async function checkHealth() {
   try {
@@ -40,7 +66,7 @@ async function generateText() {
   const prompt = promptInput.value.trim();
 
   if (!prompt) {
-    resultBox.textContent = "Veuillez saisir un prompt.";
+    resultBox.textContent = "Veuillez saisir un texte source.";
     return;
   }
 
@@ -88,6 +114,7 @@ presetSelect.addEventListener("change", () => {
   const preset = presetSelect.value;
   if (preset && presetPrompts[preset]) {
     promptInput.value = presetPrompts[preset];
+    modeHint.textContent = presetHints[preset];
   }
 });
 
