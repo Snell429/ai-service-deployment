@@ -47,6 +47,12 @@ Ce projet montre donc comment :
 - image Docker publiee dans `Artifact Registry`
 - support du load balancing et de l'autoscaling
 
+## Architecture du projet
+
+Le schema ci-dessous resume l'architecture actuelle du projet, incluant la CI/CD, les environnements `test` et `prod`, ainsi que l'acces via le load balancer et le Managed Instance Group.
+
+![Architecture du projet IA / MLOps sur GCP](docs/architecture-projet-gcp.png)
+
 ## Structure du projet
 
 - `main.py` : API FastAPI et logique de generation
@@ -115,6 +121,15 @@ Le projet a ete deployee sur `Google Cloud Platform` avec :
 - des secrets GitHub
 - une CI/CD `GitHub Actions`
 
+### Acces deploiement actuel
+
+Le projet est accessible a travers un `HTTP Load Balancer` GCP.
+
+- Load balancer : `http://8.233.85.68`
+- Application web : `http://8.233.85.68/app`
+- Health check : `http://8.233.85.68/health`
+- Generation : `http://8.233.85.68/generate?prompt=Explain%20AI%20simply`
+
 ### Flux de deploiement
 
 1. push sur `main`
@@ -173,7 +188,7 @@ L'interface web permet :
 Acces :
 
 - local : `http://localhost:8000/app`
-- derriere le load balancer : `http://LOAD_BALANCER_IP/app`
+- derriere le load balancer : `http://8.233.85.68/app`
 
 ## Limites actuelles
 
@@ -198,10 +213,22 @@ Acces :
 curl http://localhost:8000/health
 ```
 
+ou via le load balancer :
+
+```powershell
+curl http://8.233.85.68/health
+```
+
 ### Generation
 
 ```powershell
 curl "http://localhost:8000/generate?prompt=Explain%20AI%20simply"
+```
+
+ou via le load balancer :
+
+```powershell
+curl "http://8.233.85.68/generate?prompt=Explain%20AI%20simply"
 ```
 
 ### App web
@@ -210,6 +237,12 @@ Ouvrir :
 
 ```text
 http://localhost:8000/app
+```
+
+ou :
+
+```text
+http://8.233.85.68/app
 ```
 
 ## Auteur
